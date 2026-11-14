@@ -1,4 +1,5 @@
-from services.google_docs import ler_documentacao
+
+from services.atendimento import atender_colaborador
 
 
 def main():
@@ -8,24 +9,38 @@ def main():
     print("=" * 50)
 
     try:
+        colaborador = input("\nInforme seu nome: ").strip()
 
-        print("\nConectando ao Google Docs...")
+        pergunta = input("\nDescreva sua dúvida ou problema: ").strip()
 
-        documentacao = ler_documentacao()
+        if not colaborador or not pergunta:
+            print("\nErro: informe seu nome e sua dúvida.")
+            return
 
-        print("\nDocumentação carregada com sucesso!")
+        print("\nAnalisando sua solicitação...")
+        resultado = atender_colaborador(colaborador, pergunta)
 
-        print("\nCONTEÚDO DO DOCUMENTO:")
-        print("-" * 50)
+        print("\n" + "=" * 50)
+        print("RESULTADO DO ATENDIMENTO")
+        print("=" * 50)
 
-        print(documentacao)
+        if resultado["status"] == "respondido":
 
-        print("-" * 50)
+            print("\nStatus: Dúvida resolvida pela IA")
+            print(f"\nOrientação:\n{resultado['resposta']}")
+
+        elif resultado["status"] == "chamado_aberto":
+
+            print("\nStatus: Chamado registrado automaticamente")
+            print(f"Identificador: {resultado['identificador']}")
+            print(f"Categoria: {resultado['categoria']}")
+            print(f"Prioridade: {resultado['prioridade']}")
+            print(f"\nOrientação: {resultado['resposta']}")
+
+        print("\n" + "=" * 50)
 
     except Exception as erro:
-
-        print("\nErro durante a execução:")
-        print(erro)
+        print(f"\nErro durante o atendimento: {erro}")
 
 
 if __name__ == "__main__":
